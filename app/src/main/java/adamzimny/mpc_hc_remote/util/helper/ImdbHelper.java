@@ -35,6 +35,7 @@ public class ImdbHelper {
     }
 
     public static boolean isTvSeries(String filename) {
+        if (filename == null) return false;
         boolean result = false;
         Log.d("filename", filename);
         Pattern p = Pattern.compile("[sS][0-9]{2}[eE][0-9]{2}");

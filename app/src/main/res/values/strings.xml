@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MPC-HC Remote</string>
+    <string name="app_name">MPC Remote</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

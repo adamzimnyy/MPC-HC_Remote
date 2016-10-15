@@ -1,5 +1,8 @@
 package adamzimny.mpc_hc_remote.util;
 
+import android.util.Log;
+import org.json.JSONObject;
+
 import java.util.Map;
 
 /**
@@ -25,8 +28,10 @@ public class Variables {
     public static int reloadtime;
     public static String imdb;
     public static String title;
+    public static String poster;
 
     public static void readMap(Map<String, String> map) {
+        Log.d("updater","readMap "+new JSONObject(map).toString());
         duration = Integer.parseInt(map.get("duration"));
         file = map.get("file");
         durationstring = map.get("durationstring");
@@ -49,6 +54,7 @@ public class Variables {
 
 
     public static void reset() {
+        Log.d("updater","RESET!!!!!!!!");
         duration = 0;
         file = null;
         durationstring = null;
@@ -66,5 +72,6 @@ public class Variables {
         muted =0;
         playbackrate =0;
         reloadtime =0;
+        poster = "default";
     }
 }

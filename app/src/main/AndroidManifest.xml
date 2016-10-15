@@ -16,13 +16,13 @@
             android:supportsRtl="true">
         <activity
                 android:name=".activity.RemoteActivity"
-                android:label="@string/app_name"
+                android:windowSoftInputMode="adjustResize"
                 android:theme="@style/AppTheme">
 
         </activity>
         <activity
                 android:name=".activity.ConnectActivity"
-                android:label="Connect"
+                android:windowSoftInputMode="adjustResize"
                 android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

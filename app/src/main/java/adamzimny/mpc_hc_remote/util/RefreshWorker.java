@@ -3,6 +3,7 @@ package adamzimny.mpc_hc_remote.util;
 import adamzimny.mpc_hc_remote.api.MediaPlayerClassicHomeCinema;
 import android.os.AsyncTask;
 import android.util.Log;
+import org.json.JSONObject;
 
 import java.awt.font.NumericShaper;
 import java.io.IOException;
@@ -18,6 +19,7 @@ public class RefreshWorker {
     MediaPlayerClassicHomeCinema mpc;
     Timer timer;
     MpcUpdateListener listener;
+    final int[] failCount = {0};
 
     public RefreshWorker(MediaPlayerClassicHomeCinema mpc, MpcUpdateListener listener) {
         this.mpc = mpc;
@@ -32,13 +34,17 @@ public class RefreshWorker {
 
             @Override
             public void run() {
+
                 AsyncTask.execute(new Runnable() {
                     @Override
                     public void run() {
                         try {
+
                             Map<String, String> variables = mpc.getVariables();
                             //if opened a different file
+                            failCount[0] = 0;
                             if (!variables.get("file").equals(Variables.file)) {
+                                Log.d("updater", variables.get("file") + " vs " + Variables.file);
                                 listener.onUpdate(variables);
                                 return;
                             }
@@ -65,8 +71,15 @@ public class RefreshWorker {
                             }
                             isFileOpen = true;
                         } catch (IOException e) {
-                            if (isFileOpen) listener.onFileClosed();
-                            isFileOpen = false;
+                            failCount[0]++;
+                            Log.d("updater", "fail! " + failCount[0] +" "+e.getLocalizedMessage());
+                            if (failCount[0] > 10) {
+                                if (isFileOpen) {
+                                    listener.onFileClosed();
+                                    isFileOpen = false;
+                                    failCount[0] = 0;
+                                }
+                            }
                         } catch (NumberFormatException ne) {
                             ne.printStackTrace();
                         }
@@ -75,7 +88,7 @@ public class RefreshWorker {
             }
         };
 
-        timer.scheduleAtFixedRate(timerTask, 0, 200);
+        timer.scheduleAtFixedRate(timerTask, 0, 500);
     }
 
     public void stop() {

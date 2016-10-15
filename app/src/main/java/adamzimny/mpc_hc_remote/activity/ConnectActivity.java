@@ -58,7 +58,7 @@ public class ConnectActivity extends AppCompatActivity {
         //    test();
 
         ImageLoaderHelper.initialize(this);
-        ImageLoader.getInstance().displayImage("drawable://" + R.drawable.connect_bg, bg);
+        ImageLoader.getInstance().displayImage("drawable://" + R.drawable.bg2, bg);
         // Set up the login form.
         IPView = (AutoCompleteTextView) findViewById(R.id.ip);
         Log.d("replace", "S03E15".replace("\\^[0-9]{2}E[0-9]{2}", ""));
@@ -74,7 +74,7 @@ public class ConnectActivity extends AppCompatActivity {
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = (Button) findViewById(R.id.connect_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {

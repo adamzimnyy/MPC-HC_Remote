@@ -20,6 +20,7 @@ import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
@@ -72,6 +73,9 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
     @BindView(R.id.file_browser_recycler)
     RecyclerView fileBrowser;
     FastItemAdapter<FileItem> adapter;
+
+    @BindView(R.id.swipe_layout)
+    SwipeRevealLayout swipeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,6 +189,12 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
 
     @Override
     public void onBackPressed() {
+        if (swipeLayout.isOpened()) {
+            swipeLayout.close(true);
+            return;
+        }
+
+
         disconnect();
         if (posterTask != null) {
             posterTask.cancel(true);
@@ -194,8 +204,8 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
     public void initView() {
 
         ImageLoaderHelper.initialize(this);
-        ImageLoader.getInstance().displayImage("drawable://" + R.drawable.connect_bg, backgroundImage);
-        ImageLoader.getInstance().displayImage("drawable://" + R.drawable.connect_bg, poster);
+        ImageLoader.getInstance().displayImage("drawable://" + R.drawable.bg2, backgroundImage);
+        ImageLoader.getInstance().displayImage("drawable://" + R.drawable.bg2, poster);
         title.setText(Variables.file);
         title.setSelected(true);
         if ("Playing".equals(Variables.statestring)) {
@@ -234,7 +244,7 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
                             mpc.setVolume(seekBar.getProgress());
                             Variables.volumelevel = seekBar.getProgress();
                         } catch (IOException e) {
-                            Log.e("mpc excetion", e.getLocalizedMessage());
+                            Log.e("mpc excetion","message: " + e.getLocalizedMessage());
                         }
                     }
                 });
@@ -270,7 +280,7 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
                             Variables.position = seekBar.getProgress();
                             mpc.seek(tc[0]);
                         } catch (IOException e) {
-                            Log.e("mpc exception", "shit");
+                            Log.e("mpc exception", "message: " +e.getLocalizedMessage());
                         } catch (TimeCodeException e) {
                             e.printStackTrace();
                         }
@@ -299,7 +309,7 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
                 try {
                     mpc.toggleFullscreen();
                 } catch (IOException e) {
-                    Log.e("mpc excetion", e.getLocalizedMessage());
+                    Log.e("mpc excetion","message: " + e.getLocalizedMessage());
                 }
             }
         });
@@ -313,7 +323,7 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
                 try {
                     mpc.execute(Command.SUBTITLE_DELAY_MINUS);
                 } catch (IOException e) {
-                    Log.e("mpc excetion", e.getLocalizedMessage());
+                    Log.e("mpc excetion","message: " + e.getLocalizedMessage());
                 }
             }
         });
@@ -327,7 +337,7 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
                 try {
                     mpc.execute(Command.SUBTITLE_DELAY_PLUS);
                 } catch (IOException e) {
-                    Log.e("mpc excetion", e.getLocalizedMessage());
+                    Log.e("mpc excetion", "message: " +e.getLocalizedMessage());
                 }
             }
         });
@@ -355,7 +365,7 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
                 try {
                     mpc.toggleMute();
                 } catch (IOException e) {
-                    Log.e("mpc excetion", e.getLocalizedMessage());
+                    Log.e("mpc excetion","message: " + e.getLocalizedMessage());
                 }
             }
         });
@@ -370,7 +380,7 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
                 try {
                     mpc.execute(Command.PREVIOUS_FILE);
                 } catch (IOException e) {
-                    Log.e("mpc excetion", e.getLocalizedMessage());
+                    Log.e("mpc excetion","message: " + e.getLocalizedMessage());
                 }
             }
         });
@@ -385,7 +395,7 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
                     //  mpc.seek(new TimeCode(Variables.position / 1000 - 10));
                     mpc.jump(-10);
                 } catch (IOException e) {
-                    Log.e("mpc excetion", e.getLocalizedMessage());
+                    Log.e("mpc excetion","message: " + e.getLocalizedMessage());
                 } catch (TimeCodeException e) {
                     e.printStackTrace();
                 }
@@ -413,7 +423,7 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
                 try {
                     mpc.togglePlayPause();
                 } catch (IOException e) {
-                    Log.e("mpc excetion", e.getLocalizedMessage());
+                    Log.e("mpc excetion","message: " + e.getLocalizedMessage());
                 }
             }
         });
@@ -428,7 +438,7 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
                     //  mpc.seek(new TimeCode(Variables.position / 1000 + 10));
                     mpc.jump(10);
                 } catch (IOException e) {
-                    Log.e("mpc excetion", e.getLocalizedMessage());
+                    Log.e("mpc excetion","message: " +e.getLocalizedMessage());
                 } catch (TimeCodeException e) {
                     e.printStackTrace();
                 }
@@ -486,6 +496,7 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
                 initView();
             }
         });
+        initFileBrowser();
     }
 
 
@@ -567,8 +578,8 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ImageLoader.getInstance().displayImage("drawable://" + R.drawable.connect_bg, backgroundImage);
-                ImageLoader.getInstance().displayImage("drawable://" + R.drawable.connect_bg, poster);
+                ImageLoader.getInstance().displayImage("drawable://" + R.drawable.bg2, backgroundImage);
+                ImageLoader.getInstance().displayImage("drawable://" + R.drawable.bg2, poster);
                 title.setText("");
                 positionText.setText("00:00:00");
                 progressBar.setProgress(0);
@@ -604,13 +615,17 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
             ImageLoaderHelper.initialize(RemoteActivity.this);
             if (result.isEmpty()) {
                 title.setText(Variables.file);
-                ImageLoader.getInstance().displayImage("drawable://" + R.drawable.default_poster, backgroundImage);
-                ImageLoader.getInstance().displayImage("drawable://" + R.drawable.default_poster, poster);
+                Variables.poster = "default";
+                ImageLoader.getInstance().displayImage("drawable://" + R.drawable.bg2, backgroundImage);
+                ImageLoader.getInstance().displayImage("drawable://" + R.drawable.bg2,poster);
             } else {
-                title.setText(Variables.title);
-                ImageLoader.getInstance().displayImage(result, backgroundImage);
-                ImageLoader.getInstance().displayImage(result, poster);
 
+                if(!result.equalsIgnoreCase(Variables.poster)) {
+                    title.setText(Variables.title);
+                    Variables.poster = result;
+                    ImageLoader.getInstance().displayImage(result, backgroundImage);
+                    ImageLoader.getInstance().displayImage(result, poster);
+                }
             }
         }
     }

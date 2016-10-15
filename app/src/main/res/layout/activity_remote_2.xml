@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:app="http://schemas.android.com/apk/res-auto"   android:animateLayoutChanges="true"
              android:layout_width="match_parent" android:layout_height="match_parent"
              android:background="@color/default_background">
 
@@ -63,7 +63,7 @@
 
             <com.chauthai.swipereveallayout.SwipeRevealLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="match_parent" android:id="@+id/swipe_layout"
                     app:mode="same_level"
                     app:dragEdge="right" android:background="@null">
 
