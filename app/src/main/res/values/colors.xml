@@ -7,6 +7,7 @@
     <color name="black">#000</color>
     <color name="white">#fff</color>
     <color name="icon_nonclickable">#545454</color>
+    <color name="file_type">#545454</color>
     <color name="icon_clickable">#fff</color>
     <color name="default_background">#f1151515</color>
     <color name="seek_bar_back">#232323</color>

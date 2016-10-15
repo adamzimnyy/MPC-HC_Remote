@@ -69,7 +69,7 @@ public class MediaPlayerClassicHomeCinema {
 
     private static final Pattern VERSION_PATTERN =
             Pattern.compile("« (MPC-HC v\\d+.\\d+.\\d+.\\d+).*");
-    private static final String BROWSER_ROOT_URI_PATH = "/browser.html?path=";
+    private static final String BROWSER_ROOT_URI_PATH = "/browser.html";
 
     private static final String VARIABLE_IDS[] = new String[]{
             "file", "filepatharg", "filepath", "filedirarg", "filedir", "state",

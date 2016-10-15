@@ -47,4 +47,8 @@ dependencies {
     compile 'jp.wasabeef:blurry:2.0.3'
     compile 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.0'
     compile 'com.github.mmin18:realtimeblurview:1.0.4'
+
+    compile('com.mikepenz:fastadapter:1.8.2@aar') {
+        transitive = true
+    }
 }

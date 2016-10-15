@@ -70,12 +70,10 @@
                 <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_gravity="center"
-                            android:textColor="@color/white"
-                            android:layout_height="wrap_content"
-                            android:text="File browser, coming soon."/>
+                   <android.support.v7.widget.RecyclerView
+                           android:id="@+id/file_browser_recycler"
+                           android:layout_width="match_parent"
+                           android:layout_height="match_parent"/>
 
 
                 </FrameLayout>

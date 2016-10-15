@@ -1,30 +1,34 @@
 package adamzimny.mpc_hc_remote.activity;
 
 import adamzimny.mpc_hc_remote.R;
+import adamzimny.mpc_hc_remote.api.*;
 import adamzimny.mpc_hc_remote.util.*;
-import adamzimny.mpc_hc_remote.api.Command;
-import adamzimny.mpc_hc_remote.api.MediaPlayerClassicHomeCinema;
-import adamzimny.mpc_hc_remote.api.TimeCode;
-import adamzimny.mpc_hc_remote.api.TimeCodeException;
 import adamzimny.mpc_hc_remote.util.helper.ImageLoaderHelper;
 import adamzimny.mpc_hc_remote.util.helper.ImdbHelper;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public class RemoteActivity extends AppCompatActivity implements MpcUpdateListener {
@@ -65,6 +69,10 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
     RefreshWorker worker;
     PosterTask posterTask;
 
+    @BindView(R.id.file_browser_recycler)
+    RecyclerView fileBrowser;
+    FastItemAdapter<FileItem> adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,12 +85,108 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
         mpc = new MediaPlayerClassicHomeCinema(Variables.ip, Variables.port);
         worker = new RefreshWorker(mpc, this);
         worker.run();
+
+        adapter = new FastItemAdapter<>();
+        fileBrowser.setAdapter(adapter);
+        fileBrowser.setLayoutManager(new LinearLayoutManager(this));
+
+
+        adapter.withOnClickListener(new FastAdapter.OnClickListener<FileItem>() {
+            @Override
+            public boolean onClick(View v, IAdapter<FileItem> adapter, FileItem item, int position) {
+                if (item.getInfo().isDirectory())
+                    browse(item.getInfo());
+                else
+                    openFile(item.getInfo());
+                return false;
+            }
+
+        });
+        initFileBrowser();
+    }
+
+
+    private void initFileBrowser() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.clear();
+                        }
+                    });
+                    final List<FileInfo> files = mpc.browse();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (FileInfo file : files) {
+                                Log.d("browser", "file " + file.getFileName());
+                                adapter.add(new FileItem(file));
+
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void browse(final FileInfo item) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.clear();
+                        }
+                    });
+                    final List<FileInfo> files = mpc.browse(item);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (FileInfo file : files) {
+                                Log.d("browser", "file " + file.getFileName());
+
+                                adapter.add(new FileItem(file));
+
+
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+
+    private void openFile(final FileInfo item) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mpc.openFile(item);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
         disconnect();
-        if(posterTask!= null){
+        if (posterTask != null) {
             posterTask.cancel(true);
         }
     }
@@ -142,7 +246,7 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
         progressBar.setMax(Variables.duration);
         positionText.setText(Variables.positionstring);
         durationText.setText(Variables.durationstring);
-        Log.d("worker","duration string is "+Variables.durationstring+" vs "+durationText.getText().toString());
+        Log.d("worker", "duration string is " + Variables.durationstring + " vs " + durationText.getText().toString());
         progressBar.setProgress(Variables.position);
         progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -374,7 +478,7 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
 
     @Override
     public void onUpdate(Map<String, String> map) {
-        Log.d("worker","onUpdate"+map.get("durationstring"));
+        Log.d("worker", "onUpdate" + map.get("durationstring"));
         Variables.readMap(map);
         runOnUiThread(new Runnable() {
             @Override
@@ -399,7 +503,7 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
 
     @Override
     public void onPositionChanged(final Map<String, String> variables) {
-         final int pos = Integer.parseInt(variables.get("position"));
+        final int pos = Integer.parseInt(variables.get("position"));
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -413,7 +517,7 @@ public class RemoteActivity extends AppCompatActivity implements MpcUpdateListen
 
     @Override
     public void onMute(Map<String, String> variables) {
-         isMuted = Integer.parseInt(variables.get("muted")) == 1;
+        isMuted = Integer.parseInt(variables.get("muted")) == 1;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

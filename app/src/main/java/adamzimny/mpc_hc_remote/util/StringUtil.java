@@ -20,7 +20,17 @@ public class StringUtil {
 
     public static final String[] extensions = new String[]{"mp3", "mp4", "wma", "avi", "mkv", "flv", "gifv", "mov", "wmv", "vob", "ogg", "webm", "mpg", "mpeg", "rmvb", "flv", "3gp"};
 
+    public static boolean isVideoFile(String filename){
+        for (String s : extensions) {
+            if (filename.toLowerCase().endsWith(s.toLowerCase())) {
+               return true;
+            }
+        }
+        return false;
+    }
+
     public static String getTitleFromFileName(String filename) {
+        if(filename == null) return "";
         filename = filename.toLowerCase();
         for (String s : releases) {
             if (filename.contains(s.toLowerCase())) {
