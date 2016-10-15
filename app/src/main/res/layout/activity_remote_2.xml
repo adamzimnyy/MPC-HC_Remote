@@ -24,12 +24,11 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text"
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
-                android:lines="1"
+                android:lines="1" android:text=""
                 android:singleLine="true"
                 android:id="@+id/title" android:layout_gravity="center_horizontal" android:textColor="@color/white"
                 android:textSize="18sp" android:layout_marginBottom="8dp"/>
@@ -50,13 +49,13 @@
                           android:background="@null" android:orientation="horizontal" android:paddingLeft="12dp"
                           android:paddingRight="12dp">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                          android:text="00:17:41"
+
                           android:id="@+id/position_text" android:textColor="@color/white"/>
                 <SeekBar android:layout_gravity="center_horizontal" android:maxHeight="200dp"
                          android:id="@+id/progress_bar" android:layout_width="0dp" android:layout_height="match_parent"
                          android:layout_weight="1"/>
                 <TextView
-                        android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="01:06:20"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
                         android:id="@+id/duration_text" android:textColor="@color/white"/>
             </LinearLayout>
             <View android:layout_width="match_parent" android:layout_height="1dp"
@@ -94,9 +93,9 @@
                             android:paddingLeft="12dp"
                             android:paddingRight="12dp"
                             android:gravity="center">
-                        <ImageButton android:layout_width="42dp"
+                        <ImageButton android:layout_width="48dp"
                                      android:background="@null"
-                                     android:layout_height="42dp"
+                                     android:layout_height="48dp"
                                      android:padding="12dp"
                                      android:src="@drawable/volume_up"
                                      android:scaleType="fitXY"
@@ -109,11 +108,11 @@
                                 android:layout_weight="1"/>
 
                         <ImageButton
-                                android:layout_width="42dp"
+                                android:layout_width="48dp"
 
 
                                 android:background="@null"
-                                android:layout_height="42dp" android:padding="12dp"
+                                android:layout_height="48dp" android:padding="12dp"
                                 android:src="@drawable/fullscreen"
                                 android:scaleType="fitXY" android:id="@+id/fullscreen"/>
 
@@ -122,14 +121,14 @@
                     <!-- Subtitles and playlist controls-->
                     <LinearLayout android:layout_width="match_parent"
                                   android:layout_height="64dp"
-                                  android:gravity="center">
+                                  android:gravity="center" android:paddingLeft="12dp" android:paddingRight="12dp">
 
 
                         <!-- Playlist controls-->
                         <ImageButton android:src="@drawable/previous"
                                      android:id="@+id/previous_file"
-                                     android:layout_width="42dp"
-                                     android:layout_height="42dp"
+                                     android:layout_width="48dp"
+                                     android:layout_height="48dp"
                                      android:background="@null"
                                      android:padding="12dp"
                                      android:scaleType="fitXY"/>
@@ -142,8 +141,8 @@
                                    android:tint="@color/icon_nonclickable"/>
                         <ImageButton android:src="@drawable/next"
                                      android:id="@+id/next_file"
-                                     android:layout_width="42dp"
-                                     android:layout_height="42dp"
+                                     android:layout_width="48dp"
+                                     android:layout_height="48dp"
                                      android:scaleType="fitXY"
                                      android:background="@null"
                                      android:padding="12dp"/>
@@ -151,13 +150,13 @@
 
                         <!-- Subtitles controls -->
                         <Space
-                                android:layout_width="42dp"
+                                android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                        />
+                                android:layout_weight="1"/>
                         <ImageButton android:id="@+id/sub_delay_down"
                                      android:src="@drawable/minus"
-                                     android:layout_width="42dp"
-                                     android:layout_height="42dp"
+                                     android:layout_width="48dp"
+                                     android:layout_height="48dp"
                                      android:scaleType="fitXY"
                                      android:background="@null"
                                      android:padding="12dp"/>
@@ -170,8 +169,8 @@
                                    android:tint="@color/icon_nonclickable"/>
                         <ImageButton android:src="@drawable/plus"
                                      android:id="@+id/sub_delay_up"
-                                     android:layout_width="42dp"
-                                     android:layout_height="42dp"
+                                     android:layout_width="48dp"
+                                     android:layout_height="48dp"
                                      android:scaleType="fitXY"
                                      android:background="@null"
                                      android:padding="12dp"/>

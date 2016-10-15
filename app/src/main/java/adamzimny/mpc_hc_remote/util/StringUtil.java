@@ -1,4 +1,4 @@
-package adamzimny.mpc_hc_remote.util.helper;
+package adamzimny.mpc_hc_remote.util;
 
 import android.util.Log;
 

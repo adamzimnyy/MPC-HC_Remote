@@ -1,14 +1,14 @@
 package adamzimny.mpc_hc_remote.activity;
 
 import adamzimny.mpc_hc_remote.R;
-import adamzimny.mpc_hc_remote.util.Variables;
+import adamzimny.mpc_hc_remote.util.*;
 import adamzimny.mpc_hc_remote.api.Command;
 import adamzimny.mpc_hc_remote.api.MediaPlayerClassicHomeCinema;
 import adamzimny.mpc_hc_remote.api.TimeCode;
 import adamzimny.mpc_hc_remote.api.TimeCodeException;
-import adamzimny.mpc_hc_remote.util.helper.DateUtils;
 import adamzimny.mpc_hc_remote.util.helper.ImageLoaderHelper;
 import adamzimny.mpc_hc_remote.util.helper.ImdbHelper;
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,10 +24,10 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
-import java.util.regex.Pattern;
 
-public class RemoteActivity extends AppCompatActivity {
+public class RemoteActivity extends AppCompatActivity implements MpcUpdateListener {
 
     Map<String, String> variables;
     String ip;
@@ -36,7 +36,6 @@ public class RemoteActivity extends AppCompatActivity {
     boolean isPlaying;
     boolean isMuted;
 
-    boolean settingsVisible = true;
     @BindView(R.id.title)
     TextView title;
 
@@ -63,6 +62,8 @@ public class RemoteActivity extends AppCompatActivity {
 
     @BindView(R.id.volume_bar)
     SeekBar volumeBar;
+    RefreshWorker worker;
+    PosterTask posterTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,16 @@ public class RemoteActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mpc = new MediaPlayerClassicHomeCinema(Variables.ip, Variables.port);
-        initView();
+        worker = new RefreshWorker(mpc, this);
+        worker.run();
+    }
+
+    @Override
+    public void onBackPressed() {
+        disconnect();
+        if(posterTask!= null){
+            posterTask.cancel(true);
+        }
     }
 
     public void initView() {
@@ -84,32 +94,20 @@ public class RemoteActivity extends AppCompatActivity {
         ImageLoader.getInstance().displayImage("drawable://" + R.drawable.connect_bg, poster);
         title.setText(Variables.file);
         title.setSelected(true);
-        if (Variables.statestring.equals("Playing")) {
+        if ("Playing".equals(Variables.statestring)) {
             isPlaying = true;
             playButton.setImageResource(R.drawable.pause);
-            progressBar.setProgress(Variables.position * 100 / Variables.duration);
         } else {
             isPlaying = false;
             playButton.setImageResource(R.drawable.play);
         }
         isMuted = Variables.muted == 1;
-        Log.d("muted", " Variables.muted = " + Variables.muted);
-        Log.d("muted", " isMuted = " + isMuted);
-        if (!isMuted) {
-            Log.d("muted", " setting icon to volume_up");
-
-            muteButton.setImageResource(R.drawable.volume_up);
-        } else {
-            Log.d("muted", "  setting icon to mute");
-            muteButton.setImageResource(R.drawable.mute);
-        }
+        muteButton.setImageResource(isMuted ? R.drawable.mute : R.drawable.volume_up);
         volumeBar.setProgress(Variables.volumelevel);
-
         if (Variables.file != null && !Variables.file.isEmpty() && !Variables.file.equals("N/A")) {
-            PosterTask task = new PosterTask();
-            task.execute(Variables.file);
+            posterTask = new PosterTask();
+            posterTask.execute(Variables.file);
         }
-
         volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -144,6 +142,7 @@ public class RemoteActivity extends AppCompatActivity {
         progressBar.setMax(Variables.duration);
         positionText.setText(Variables.positionstring);
         durationText.setText(Variables.durationstring);
+        Log.d("worker","duration string is "+Variables.durationstring+" vs "+durationText.getText().toString());
         progressBar.setProgress(Variables.position);
         progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -164,7 +163,6 @@ public class RemoteActivity extends AppCompatActivity {
                     public void run() {
                         try {
                             tc[0] = new TimeCode(seekBar.getProgress() / 1000);
-                            //  TimeCode tc = new TimeCode(100);
                             Variables.position = seekBar.getProgress();
                             mpc.seek(tc[0]);
                         } catch (IOException e) {
@@ -183,6 +181,8 @@ public class RemoteActivity extends AppCompatActivity {
 
     @OnClick(R.id.disconnect)
     public void disconnect() {
+        worker.stop();
+        Variables.reset();
         finish();
     }
 
@@ -231,7 +231,7 @@ public class RemoteActivity extends AppCompatActivity {
 
     @OnClick(R.id.mute)
     public void mute() {
-        Log.d("muted", "Mute button pressed");
+     /*   Log.d("muted", "Mute button pressed");
 
         if (!isMuted) {
             Log.d("muted", " setting icon to volume_up");
@@ -244,7 +244,7 @@ public class RemoteActivity extends AppCompatActivity {
         isMuted = !isMuted;
         Variables.muted = isMuted ? 1 : 0;
         Log.d("muted", "new values, isMuted = " + isMuted + ", Variables.muted = " + Variables.muted);
-
+*/
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -255,7 +255,7 @@ public class RemoteActivity extends AppCompatActivity {
                 }
             }
         });
-        volumeBar.setEnabled(!isMuted);
+        //  volumeBar.setEnabled(!isMuted);
     }
 
     @OnClick(R.id.previous_file)
@@ -278,7 +278,7 @@ public class RemoteActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                  //  mpc.seek(new TimeCode(Variables.position / 1000 - 10));
+                    //  mpc.seek(new TimeCode(Variables.position / 1000 - 10));
                     mpc.jump(-10);
                 } catch (IOException e) {
                     Log.e("mpc excetion", e.getLocalizedMessage());
@@ -288,21 +288,21 @@ public class RemoteActivity extends AppCompatActivity {
             }
         });
         //TODO warunek na 0 lub 100%
-        Variables.position -= 10 * 1000;
+     /*   Variables.position -= 10 * 1000;
         positionText.setText(DateUtils.secondsToTime(Variables.position / 1000));
-        progressBar.setProgress(Variables.position);
+        progressBar.setProgress(Variables.position);*/
     }
 
     @OnClick(R.id.play)
     public void play() {
-
+/*
         if (!isPlaying) {
             playButton.setImageResource(R.drawable.pause);
         } else {
             playButton.setImageResource(R.drawable.play);
 
         }
-        isPlaying = !isPlaying;
+        isPlaying = !isPlaying;*/
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -321,7 +321,7 @@ public class RemoteActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                  //  mpc.seek(new TimeCode(Variables.position / 1000 + 10));
+                    //  mpc.seek(new TimeCode(Variables.position / 1000 + 10));
                     mpc.jump(10);
                 } catch (IOException e) {
                     Log.e("mpc excetion", e.getLocalizedMessage());
@@ -330,10 +330,10 @@ public class RemoteActivity extends AppCompatActivity {
                 }
             }
         });
-        //TODO warunek na 0 lub 100%
+     /*   //TODO warunek na 0 lub 100%
         Variables.position += 10 * 1000;
         positionText.setText(DateUtils.secondsToTime(Variables.position / 1000));
-        progressBar.setProgress(Variables.position);
+        progressBar.setProgress(Variables.position);*/
     }
 
     @OnClick(R.id.next_file)
@@ -370,6 +370,121 @@ public class RemoteActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onUpdate(Map<String, String> map) {
+        Log.d("worker","onUpdate"+map.get("durationstring"));
+        Variables.readMap(map);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                initView();
+            }
+        });
+    }
+
+
+    @Override
+    public void onVolumeChanged(Map<String, String> variables) {
+        final int volume = Integer.parseInt(variables.get("volumelevel"));
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                volumeBar.setProgress(volume);
+            }
+        });
+        Variables.volumelevel = volume;
+    }
+
+    @Override
+    public void onPositionChanged(final Map<String, String> variables) {
+         final int pos = Integer.parseInt(variables.get("position"));
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                positionText.setText(variables.get("positionstring"));
+                progressBar.setProgress(pos);
+            }
+        });
+        Variables.position = pos;
+        Variables.positionstring = variables.get("positionstring");
+    }
+
+    @Override
+    public void onMute(Map<String, String> variables) {
+         isMuted = Integer.parseInt(variables.get("muted")) == 1;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                volumeBar.setEnabled(!isMuted);
+                if (isMuted) {
+                    muteButton.setImageResource(R.drawable.mute);
+                } else {
+                    muteButton.setImageResource(R.drawable.volume_up);
+                }
+            }
+        });
+
+        Variables.muted = isMuted ? 1 : 0;
+
+    }
+
+    @Override
+    public void onStateChanged(Map<String, String> variables) {
+        String state = variables.get("statestring");
+        if (state.equals("Playing")) {
+            isPlaying = true;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    playButton.setImageResource(R.drawable.pause);
+                }
+            });
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    isPlaying = false;
+                    playButton.setImageResource(R.drawable.play);
+                }
+            });
+
+        }
+        Variables.statestring = state;
+        Variables.state = Integer.parseInt(variables.get("state"));
+    }
+
+    @Override
+    public void onFileClosed() {
+        Log.d("worker", "onFileClosed");
+        Variables.reset();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ImageLoader.getInstance().displayImage("drawable://" + R.drawable.connect_bg, backgroundImage);
+                ImageLoader.getInstance().displayImage("drawable://" + R.drawable.connect_bg, poster);
+                title.setText("");
+                positionText.setText("00:00:00");
+                progressBar.setProgress(0);
+                durationText.setText("00:00:00");
+            }
+        });
+    }
+
+    @Override
+    public void onDurationChanged(final Map<String, String> variables) {
+        final int dur = Integer.parseInt(variables.get("duration"));
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                durationText.setText(variables.get("durationstring"));
+                progressBar.setMax(dur);
+            }
+        });
+        Variables.duration = dur;
+        Variables.positionstring = variables.get("durationstring");
     }
 
     class PosterTask extends AsyncTask<String, Integer, String> {

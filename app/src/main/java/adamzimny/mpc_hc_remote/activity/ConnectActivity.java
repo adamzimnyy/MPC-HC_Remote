@@ -1,8 +1,8 @@
 package adamzimny.mpc_hc_remote.activity;
 
-import adamzimny.mpc_hc_remote.util.IntentHelper;
+import adamzimny.mpc_hc_remote.util.helper.IntentHelper;
 import adamzimny.mpc_hc_remote.util.helper.ImageLoaderHelper;
-import adamzimny.mpc_hc_remote.util.helper.StringUtil;
+import adamzimny.mpc_hc_remote.util.StringUtil;
 import adamzimny.mpc_hc_remote.util.Variables;
 import adamzimny.mpc_hc_remote.api.MediaPlayerClassicHomeCinema;
 import adamzimny.mpc_hc_remote.util.helper.ImdbHelper;
@@ -235,26 +235,9 @@ public class ConnectActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            MediaPlayerClassicHomeCinema mpc = new MediaPlayerClassicHomeCinema(ip, port);
             try {
-                Map<String, String> map = mpc.getVariables();
-                Variables.duration = Integer.parseInt(map.get("duration"));
-                Variables.file = map.get("file");
-                Variables.durationstring = map.get("durationstring");
-                Variables.filepatharg = map.get("filepatharg");
-                Variables.filepath = map.get("filepath");
-                Variables.filedirarg = map.get("filedirarg");
-                Variables.filedir = map.get("filedir");
-                Variables.state = Integer.parseInt(map.get("state"));
-                Variables.statestring = map.get("statestring");
-                Variables.position = Integer.parseInt(map.get("position"));
-                Variables.positionstring = map.get("positionstring");
-                Variables.duration = Integer.parseInt(map.get("duration"));
-                Variables.durationstring = map.get("durationstring");
-                Variables.volumelevel = Integer.parseInt(map.get("volumelevel"));
-                Variables.muted = Integer.parseInt(map.get("muted"));
-                Variables.playbackrate = Integer.parseInt(map.get("playbackrate"));
-                Variables.reloadtime = Integer.parseInt(map.get("reloadtime"));
+                MediaPlayerClassicHomeCinema mpc = new MediaPlayerClassicHomeCinema(ip, port);
+                mpc.getInfo();
             } catch (IOException e) {
                 return false;
             }

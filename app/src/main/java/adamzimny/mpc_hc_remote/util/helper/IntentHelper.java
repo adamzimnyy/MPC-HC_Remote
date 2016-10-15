@@ -1,4 +1,4 @@
-package adamzimny.mpc_hc_remote.util;
+package adamzimny.mpc_hc_remote.util.helper;
 
 import android.app.Activity;
 import android.content.Intent;

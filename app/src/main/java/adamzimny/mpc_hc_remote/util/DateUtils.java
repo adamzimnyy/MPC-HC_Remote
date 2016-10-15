@@ -1,4 +1,4 @@
-package adamzimny.mpc_hc_remote.util.helper;
+package adamzimny.mpc_hc_remote.util;
 
 /**
  * Created by adamz on 01.10.2016.

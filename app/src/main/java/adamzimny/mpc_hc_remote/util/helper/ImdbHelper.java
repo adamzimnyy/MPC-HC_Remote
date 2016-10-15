@@ -1,5 +1,6 @@
 package adamzimny.mpc_hc_remote.util.helper;
 
+import adamzimny.mpc_hc_remote.util.StringUtil;
 import adamzimny.mpc_hc_remote.util.Variables;
 import android.util.Log;
 import org.jsoup.Jsoup;
@@ -8,8 +9,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
