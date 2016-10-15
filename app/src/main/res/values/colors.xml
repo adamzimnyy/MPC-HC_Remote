@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#292929</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#ffffff</color>
+    <color name="black_transparent">#b1000000</color>
+    <color name="black">#000</color>
+    <color name="white">#fff</color>
+    <color name="icon_nonclickable">#545454</color>
+    <color name="icon_clickable">#fff</color>
+    <color name="default_background">#f1151515</color>
+    <color name="seek_bar_back">#232323</color>
+    <color name="seek_bar_front">#ffffff</color>
+    <color name="button_stroke">#232323</color>
+    <color name="play_button_background">#dc000000</color>
+    <color name="play_button_pressed">#ffffff</color>
+    <color name="black_40">#80000000</color>
+    <color name="separator">#232323</color>
+    <color name="transparent">#00000000</color>
+    <color name="hint">#b2b2b2</color>
+</resources>

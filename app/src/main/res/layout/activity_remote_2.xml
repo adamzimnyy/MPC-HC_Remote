@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent" android:layout_height="match_parent"
+             android:background="@color/default_background">
+
+    <ImageView android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:scaleType="centerCrop"
+               android:id="@+id/bg_image"
+    />
+    <com.github.mmin18.widget.RealtimeBlurView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:realtimeBlurRadius="10dp"
+            app:realtimeOverlayColor="#a8000000"/>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="bottom"
+                  android:orientation="vertical" android:layout_gravity="bottom">
+
+        <!-- Play controls and circle poster-->
+
+        <!-- Bottom panel -->
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:lines="1"
+                android:singleLine="true"
+                android:id="@+id/title" android:layout_gravity="center_horizontal" android:textColor="@color/white"
+                android:textSize="18sp" android:layout_marginBottom="8dp"/>
+        <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/bottom_panel"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="16dp"
+                android:elevation="12dp"
+                android:layout_marginRight="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="256dp"
+                android:background="@color/black_transparent">
+
+
+            <!-- Progress bar and text -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center"
+                          android:background="@null" android:orientation="horizontal" android:paddingLeft="12dp"
+                          android:paddingRight="12dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="00:17:41"
+                          android:id="@+id/position_text" android:textColor="@color/white"/>
+                <SeekBar android:layout_gravity="center_horizontal" android:maxHeight="200dp"
+                         android:id="@+id/progress_bar" android:layout_width="0dp" android:layout_height="match_parent"
+                         android:layout_weight="1"/>
+                <TextView
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="01:06:20"
+                        android:id="@+id/duration_text" android:textColor="@color/white"/>
+            </LinearLayout>
+            <View android:layout_width="match_parent" android:layout_height="1dp"
+                  android:background="@color/separator"/>
+
+            <com.chauthai.swipereveallayout.SwipeRevealLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:mode="same_level"
+                    app:dragEdge="right" android:background="@null">
+
+                <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_gravity="center"
+                            android:textColor="@color/white"
+                            android:layout_height="wrap_content"
+                            android:text="File browser, coming soon."/>
+
+
+                </FrameLayout>
+                <!-- Bottom panel controls -->
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:layout_height="match_parent"
+                        android:background="@null">
+
+                    <!-- Volume controls-->
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:gravity="center">
+                        <ImageButton android:layout_width="42dp"
+                                     android:background="@null"
+                                     android:layout_height="42dp"
+                                     android:padding="12dp"
+                                     android:src="@drawable/volume_up"
+                                     android:scaleType="fitXY"
+                                     android:id="@+id/mute"/>
+                        <SeekBar
+                                android:id="@+id/volume_bar"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:maxHeight="200dp"
+                                android:layout_weight="1"/>
+
+                        <ImageButton
+                                android:layout_width="42dp"
+
+
+                                android:background="@null"
+                                android:layout_height="42dp" android:padding="12dp"
+                                android:src="@drawable/fullscreen"
+                                android:scaleType="fitXY" android:id="@+id/fullscreen"/>
+
+                    </LinearLayout>
+
+                    <!-- Subtitles and playlist controls-->
+                    <LinearLayout android:layout_width="match_parent"
+                                  android:layout_height="64dp"
+                                  android:gravity="center">
+
+
+                        <!-- Playlist controls-->
+                        <ImageButton android:src="@drawable/previous"
+                                     android:id="@+id/previous_file"
+                                     android:layout_width="42dp"
+                                     android:layout_height="42dp"
+                                     android:background="@null"
+                                     android:padding="12dp"
+                                     android:scaleType="fitXY"/>
+                        <ImageView android:src="@drawable/playlist"
+                                   android:layout_width="42dp"
+                                   android:layout_height="42dp"
+                                   android:scaleType="fitXY"
+                                   android:background="@null"
+                                   android:padding="8dp"
+                                   android:tint="@color/icon_nonclickable"/>
+                        <ImageButton android:src="@drawable/next"
+                                     android:id="@+id/next_file"
+                                     android:layout_width="42dp"
+                                     android:layout_height="42dp"
+                                     android:scaleType="fitXY"
+                                     android:background="@null"
+                                     android:padding="12dp"/>
+
+
+                        <!-- Subtitles controls -->
+                        <Space
+                                android:layout_width="42dp"
+                                android:layout_height="match_parent"
+                        />
+                        <ImageButton android:id="@+id/sub_delay_down"
+                                     android:src="@drawable/minus"
+                                     android:layout_width="42dp"
+                                     android:layout_height="42dp"
+                                     android:scaleType="fitXY"
+                                     android:background="@null"
+                                     android:padding="12dp"/>
+                        <ImageView android:src="@drawable/sub_delay"
+                                   android:layout_width="42dp"
+                                   android:layout_height="42dp"
+                                   android:scaleType="fitXY"
+                                   android:background="@null"
+                                   android:padding="8dp"
+                                   android:tint="@color/icon_nonclickable"/>
+                        <ImageButton android:src="@drawable/plus"
+                                     android:id="@+id/sub_delay_up"
+                                     android:layout_width="42dp"
+                                     android:layout_height="42dp"
+                                     android:scaleType="fitXY"
+                                     android:background="@null"
+                                     android:padding="12dp"/>
+
+
+                    </LinearLayout>
+
+                    <Button
+                            android:id="@+id/disconnect"
+                            android:layout_width="160dp"
+                            android:layout_height="36dp"
+                            android:gravity="center"
+                            android:background="@drawable/wide_button_stroke"
+                            android:text="Disconnect"
+                            android:textAllCaps="false"
+
+                            android:textSize="14sp" android:layout_gravity="center"
+                            android:textColor="@color/white" android:layout_marginTop="16dp"/>
+                </LinearLayout>
+                <!-- File browser -->
+
+            </com.chauthai.swipereveallayout.SwipeRevealLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="268dp"
+                  android:gravity="center" android:orientation="horizontal">
+
+        <ImageButton android:layout_width="56dp" android:background="@null"
+                     android:layout_height="56dp" android:padding="8dp" android:src="@drawable/rewind"
+                     android:scaleType="fitXY" android:id="@+id/jump_back"
+                     android:layout_marginLeft="12dp" android:layout_gravity="bottom"/>
+        <FrameLayout
+
+                android:layout_width="232dp"
+                android:layout_height="232dp"
+                android:layout_gravity="center">
+            <com.mikhaellopez.circularimageview.CircularImageView
+                    app:civ_border_width="0dp"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:id="@+id/poster_small"
+                    app:civ_shadow="true"
+                    app:civ_border_color="#000000"
+                    app:civ_shadow_radius="10"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"/>
+            <ImageButton android:layout_width="match_parent"
+                         android:layout_height="match_parent" android:src="@drawable/play" android:scaleType="fitXY"
+                         android:id="@+id/play" android:padding="64dp" android:layout_gravity="center"
+                         android:background="@null"/>
+
+            <!-- Play controls-->
+        </FrameLayout>
+        <ImageButton android:layout_width="56dp"
+                     android:layout_height="56dp" android:background="@null" android:src="@drawable/forward"
+                     android:scaleType="fitXY" android:padding="8dp" android:id="@+id/jump_forward"
+                     android:layout_marginRight="12dp" android:layout_gravity="bottom"/>
+    </LinearLayout>
+</FrameLayout>
