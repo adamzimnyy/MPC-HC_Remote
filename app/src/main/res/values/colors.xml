@@ -3,7 +3,7 @@
     <color name="colorPrimary">#292929</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#ffffff</color>
-    <color name="black_transparent">#b1000000</color>
+    <color name="black_transparent">#c1000000</color>
     <color name="black">#000</color>
     <color name="white">#fff</color>
     <color name="icon_nonclickable">#545454</color>
@@ -19,4 +19,5 @@
     <color name="separator">#232323</color>
     <color name="transparent">#00000000</color>
     <color name="hint">#b2b2b2</color>
+    <color name="button_stroke_light">#6c6c6c</color>
 </resources>

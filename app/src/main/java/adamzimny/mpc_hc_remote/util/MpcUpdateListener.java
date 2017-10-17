@@ -14,4 +14,5 @@ public interface MpcUpdateListener {
     void onStateChanged(Map<String, String> variables);
     void onFileClosed();
     void onDurationChanged(Map<String, String> variables);
+    void disconnect();
 }

@@ -3,8 +3,7 @@
         android:color="#848484">
     <item>
         <shape android:shape="oval">
-            <stroke android:color="#4b4b4b" android:width="2dp"/>
-
+            <stroke android:color="@color/button_stroke_light" android:width="2dp"/>
         </shape>
     </item>
 </ripple>

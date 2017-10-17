@@ -80,6 +80,9 @@ public class RefreshWorker {
                                     failCount[0] = 0;
                                 }
                             }
+                            if(failCount[0] > 50){
+                                listener.disconnect();
+                            }
                         } catch (NumberFormatException ne) {
                             ne.printStackTrace();
                         }

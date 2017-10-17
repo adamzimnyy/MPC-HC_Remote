@@ -26,14 +26,18 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'com.android.support:design:24.2.0'
 
     //For detecting memory leaks
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
+
+    compile('com.mikepenz:fastadapter:1.8.2@aar') {
+        transitive = true
+    }
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:design:24.2.0'
     compile 'com.jakewharton:butterknife:8.2.1'
     compile 'com.mikhaellopez:circularimageview:3.0.2'
     compile 'org.jsoup:jsoup:1.9.2'
@@ -47,8 +51,5 @@ dependencies {
     compile 'jp.wasabeef:blurry:2.0.3'
     compile 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.0'
     compile 'com.github.mmin18:realtimeblurview:1.0.4'
-
-    compile('com.mikepenz:fastadapter:1.8.2@aar') {
-        transitive = true
-    }
+    compile 'com.android.support:support-v4:24.2.0'
 }
